@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import CustomButton from '../custom-button/custom-button.component'
 import FormInput from './../form-input/form-input.components'
-import signInWithGoogle from './../../firebase/firebase.utils.js'
+import { signInWithGoogle } from './../../firebase/firebase.utils.js'
 
 import './login.styles.scss'
 
@@ -31,7 +31,7 @@ export class LoginComponent extends Component {
           <h2 className='title'>I already have an account</h2>
           <span>Sign in with your email and password</span>
 
-          <form onSubmit={this.handleSubmit}>
+          <form>
             <FormInput 
               name='email' 
               type='email' 
@@ -47,13 +47,16 @@ export class LoginComponent extends Component {
               label='Password'
               required/>
 
-            <CustomButton type='submit' value='Submit Form' > Sign In</CustomButton>
-          </form>
-          <CustomButton onClick={signInWithGoogle}> Sign in with Google</CustomButton>
+            <div className="buttons">
+              <CustomButton type='submit' value='Submit Form' > Sign In</CustomButton>&nbsp;
+              {/* <CustomButton onClick={signInWithGoogle} isGoogleSignIn> Sign in with Google</CustomButton> */}
+              <button className='custom-button google-sign-in' onClick={signInWithGoogle}>Sign in with Google</button>
 
-          <button onClick={signInWithGoogle}>
-          Login with Google
-        </button>
+            </div>
+          </form>
+
+
+
 
       </div>
     )

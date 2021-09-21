@@ -22,7 +22,7 @@ const config = {
 export const fireBaseApp = initializeApp(config);
 // export const auth = firebase.auth();
 
-const auth = getAuth(fireBaseApp);
+export const auth = getAuth(fireBaseApp);
 //export const firestore = f;
 
 // const provider = new firebase.auth.GoogleAuthProvider();
@@ -39,6 +39,6 @@ const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account consent' });
 
 // provider.addScope('email');
-const signInWithGoogle = () => signInWithPopup(auth, provider);
+export const signInWithGoogle = () => signInWithPopup(auth, provider);
 // export default signInWithGoogle;
-export default signInWithGoogle;
+// export const signInWithGoogle;
