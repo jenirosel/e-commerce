@@ -32,13 +32,6 @@ export class SignInComponent extends Component {
         const errorMessage = error.message;
         console.error(errorCode, errorMessage);
       });
-    // try {
-    //   await signInWithEmailAndPassword(getAuth(), email, password);
-    //   this.setState({ email: '', password: ''})
-
-    // } catch (error) {
-    //   console.error(error)
-    // }
   }
 
   handleChange = event => {
