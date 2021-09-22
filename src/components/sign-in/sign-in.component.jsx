@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import CustomButton from '../custom-button/custom-button.component'
-import FormInput from './../form-input/form-input.components'
-import { signInWithGoogle } from './../../firebase/firebase.utils.js'
+import CustomButton from '../ui/custom-button/custom-button.component'
+import FormInput from '../ui/form-input/form-input.components'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithGoogle } from '../../firebase/firebase.utils.js'
 
-import './login.styles.scss'
+import './sign-in.styles.scss'
 
-export class LoginComponent extends Component {
+export class SignInComponent extends Component {
   constructor(props) {
     super(props)
 
@@ -15,9 +16,29 @@ export class LoginComponent extends Component {
     }
   }
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
-    this.setState({ email: '', password: ''})
+
+    const { email, password } = this.state;
+
+    await signInWithEmailAndPassword(getAuth(), email, password)
+      .then((userCredential) => {
+        // const user = userCredential.user;
+        // createUserProfileDocument(user)
+        this.setState({ email: '', password: ''})
+
+      }).catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(errorCode, errorMessage);
+      });
+    // try {
+    //   await signInWithEmailAndPassword(getAuth(), email, password);
+    //   this.setState({ email: '', password: ''})
+
+    // } catch (error) {
+    //   console.error(error)
+    // }
   }
 
   handleChange = event => {
@@ -31,7 +52,7 @@ export class LoginComponent extends Component {
           <h2 className='title'>I already have an account</h2>
           <span>Sign in with your email and password</span>
 
-          <form>
+          <form onSubmit={this.handleSubmit} >
             <FormInput 
               name='email' 
               type='email' 
@@ -63,4 +84,4 @@ export class LoginComponent extends Component {
   }
 }
 
-export default LoginComponent
+export default SignInComponent

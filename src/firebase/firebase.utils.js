@@ -2,10 +2,10 @@
 // import { getAuth } from "firebase/auth";
 
 // import 'firebase/compat/auth';
-// import 'firebase/compat/firestore';
+//  import { firestore } from 'firebase/compat/firestore';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import {initializeApp} from 'firebase/app'
-//import {firestore} from 'firebase/firestore'
+import { initializeApp } from 'firebase/app'
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 
 const config = {
@@ -18,9 +18,54 @@ const config = {
   appId: "1:891372237075:web:cfd1710afc764a96382ae6",
   measurementId: "G-5782378J7N"
 };
-
 export const fireBaseApp = initializeApp(config);
+
+export const db = getFirestore();
+
+
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+
+  const docRef = doc(db, "users", userAuth.uid);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) {
+    console.log("No such document!");
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
+
+    try {
+      const data = {displayName, email, createdAt, ...additionalData};
+      const newUserRef = doc(db, "users", userAuth.uid);
+      await setDoc(newUserRef, data);
+
+      
+      
+    } catch (error) {
+      console.log('error creating user', error.message);
+    }
+  } else {
+    
+    console.log("Document data:", docSnap.data());
+    // return {
+    //   id: docSnap.id, ...docSnap.data()
+    // };
+  }
+
+  
+  // return docSnap.data();
+}
+
+
 // export const auth = firebase.auth();
+
+
+
+// const firestore = fireBaseApp.firestore();
+// Ways to query
+// firestore.collection('users').doc('QW9TO8cRC9WfItd5h0zS').collection('cartItems').doc('KZuETADWMYDySqFhu58a');
+// fireBaseApp.doc('/users/QW9TO8cRC9WfItd5h0zS/cartItems/KZuETADWMYDySqFhu58a')
+// fireBaseApp.collection('/users/QW9TO8cRC9WfItd5h0zS/cartItems/KZuETADWMYDySqFhu58a')
 
 export const auth = getAuth(fireBaseApp);
 //export const firestore = f;
@@ -28,9 +73,6 @@ export const auth = getAuth(fireBaseApp);
 // const provider = new firebase.auth.GoogleAuthProvider();
 // const provider = new GoogleAuthProvider();
 
-
-// provider.setCustomParameters({ prompt: 'select_account' });
-// export const signInWithGoogle = () => auth.signInwithPopup(provider);
 
 // Trying out v9
 // Sign in using a popup.

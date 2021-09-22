@@ -5,9 +5,10 @@ import './App.scss'
 
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component.jsx';
-import Header from './components/header/header.component.jsx';
+import Header from './components/ui/header/header.component.jsx';
 import LoginPage from './pages/login/login.component';
-import { auth } from './firebase/firebase.utils';
+import { db, auth, createUserProfileDocument } from './firebase/firebase.utils';
+import { doc, onSnapshot } from "firebase/firestore";
 
 class App extends React.Component {
   constructor() {
@@ -21,10 +22,22 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      this.setState({currentUser: user});
-      console.log(user);
-    })
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        await createUserProfileDocument(userAuth);
+        const userRef = doc(db, "users", userAuth.uid);
+        onSnapshot(userRef, snapShot => {
+           this.setState({
+            currentUser: { id: snapShot.id, ...snapShot.data() }
+           });
+        });
+      } else {
+        this.setState({ currentUser: userAuth})
+      }
+    });
+
+    console.log('State', this.state);
+
   }
 
   componentWillUnmount() {
