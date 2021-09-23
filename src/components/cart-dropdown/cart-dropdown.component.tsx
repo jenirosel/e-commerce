@@ -1,5 +1,5 @@
 import React from 'react'
-import CustomButton from '../ui/custom-button/custom-button.component';
+// import CustomButton from '../ui/custom-button/custom-button.component';
 import './cart-dropdown.styles.scss';
 
 const CartDropdown = () => {
